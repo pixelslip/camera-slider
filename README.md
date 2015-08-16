@@ -6,5 +6,4 @@ In development, soon.
 ## TODO
 * Define length of rail
 * Define radius of wheel
-* Set shift register and segment to get countdown between shots
-
+* Create schema Fritzing
