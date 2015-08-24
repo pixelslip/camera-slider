@@ -102,11 +102,12 @@ void setup()
   lcd.createChar(4, p3);
   lcd.createChar(5, p4);
   lcd.createChar(6, p5);
-  //https://www.electronicsblog.net/arduino-lcd-horizontal-progress-bar-using-custom-characters/
 
   lcd.begin(16, 2);
-
-  //TODO Screen presentation
+  lcd.print("-Camera Slider-");
+  lcd.setCursor(0, 1);
+  lcd.print("---------------");
+  delay(2000);
   
   sleep = millis();
 }
