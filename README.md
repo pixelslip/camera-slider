@@ -10,10 +10,12 @@ In development, soon.
 * 1x DC Motor
 * 1x NPN-Transistor
 * 1x Trimmer Potentiometer 10kΩ
-* 3x 10kΩ Resistor bands 4; tolérance ±5%
+* 4x 10kΩ Resistor bands 4; tolérance ±5%
 * 1x 220Ω Resistor bands 4; tolérance ±5%
 * 3x Pushbutton
+* 1x Toggle Switch
 
 ## TODO
 * Define radius of wheel
-* Test collision to stop
+* Time
+* Custom delay, distance and duration

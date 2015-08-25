@@ -63,15 +63,10 @@ static Menu DistanceMenu = {
 byte glyphArrow[8] = {B00000, B00100, B00010, B11111, B00010, B00100, B00000, B00000};
 byte glyphSubmenu[8] = {B10000, B10000, B10100, B10010, B11111, B00010, B00100, B00000};
 
-byte p1[8] = {0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10};
-byte p2[8] = {0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18};
-byte p3[8] = {0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C};
-byte p4[8] = {0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E};
-byte p5[8] = {0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
-
 int buttonPinSelect = 2;
 int buttonPinEnter = 3;
 int buttonPinEsc = 4;
+int switchCollisionPin = 5;
 int motorPin = 6;
 
 float currentPosition = 0;
@@ -87,26 +82,21 @@ int lastButtonState = 0;
 
 float buttonPushDebounce = 0;
 float debounce = 100;
+float collisionTime;
 
 void setup()
 {
   pinMode(buttonPinSelect, INPUT);
   pinMode(buttonPinEnter, INPUT);
   pinMode(buttonPinEsc, INPUT);
-
+  pinMode(switchCollisionPin, OUTPUT);
   pinMode(motorPin, OUTPUT);
+
   lcd.createChar(0, glyphArrow);
   lcd.createChar(1, glyphSubmenu);
-  lcd.createChar(2, p1);
-  lcd.createChar(3, p2);
-  lcd.createChar(4, p3);
-  lcd.createChar(5, p4);
-  lcd.createChar(6, p5);
 
   lcd.begin(16, 2);
   lcd.print("-Camera Slider-");
-  lcd.setCursor(0, 1);
-  lcd.print("---------------");
   delay(2000);
   
   sleep = millis();
@@ -328,12 +318,21 @@ void travelingControl(void)
   float currentDistance = 0.0;
 
   do {
-    currentDistance += lapse;
-    percent = distance / 100 * currentDistance;
-    startTraveling(lapse);
-    duration -= 1;
-    btn = readButtonState(); //TODO debounce
-    delay(1000);
+    //TEST for collision
+    if(digitalRead(switchCollisionPin) == HIGH) {
+      btn = ESC;
+    } else {
+      if((millis() - collisionTime) > 1000) {
+        currentDistance += lapse;
+        percent = distance / 100 * currentDistance;
+        startTraveling(lapse);
+        duration -= 1;
+        btn = readButtonState();
+        delay(1000);
+        
+        collisionTime = millis();
+      }
+    }
 
     lcd.clear();
     lcd.print("TRAVELING");
@@ -344,7 +343,7 @@ void travelingControl(void)
     lcd.print(currentDistance);
     lcd.print("cm");
 
-  } while(btn != ESC || collisionTest() || duration == 0);
+  } while(btn != ESC || duration == 0);
   stopTraveling();
 }
 
@@ -357,10 +356,4 @@ void startTraveling(float distance)
 void stopTraveling(void) 
 {
   digitalWrite(motorPin, LOW);
-}
-
-boolean collisionTest(void)
-{
-  //TODO function to check if collision
-  return false;
 }
