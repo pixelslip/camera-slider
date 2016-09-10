@@ -1,4 +1,5 @@
 # Camera Slider
+> In Pause Development -- need a lot of change
 DIY camera motorized rail - To get great timelapse in movement!
 
 In development, soon.
@@ -14,6 +15,8 @@ In development, soon.
 * 1x 220Ω Resistor bands 4; tolérance ±5%
 * 3x Pushbutton
 * 1x Toggle Switch
+
+=> should use path motor instead
 
 ## TODO
 * Define radius of wheel
